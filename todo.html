@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>My Todo List</h1>
+    <input type="text" id="todoInput" placeholder="Enter a todo Item">
+    <button onclick="AddTodo()">Add Todo</button>
+    <ul id="list"></ul>
+    <button onclick="allClear()">AllClear</button>
+    <script>
+
+        let tasks = [];
+        function AddTodo(){
+            const input =document.getElementById("todoInput");
+            const text = input.value;
+            if(text === ""){
+                return
+            }
+            tasks.push(text)
+            input.value = "";
+            saveTask()
+            display()
+
+        }
+        function saveTask(){
+            localStorage.setItem("Tasks" , JSON.stringify(tasks));
+        }
+        function loadTask(){
+            let saved = localStorage.getItem("Tasks");
+            if(saved !== null){
+                tasks = JSON.parse(saved);
+            }
+        }
+
+        function display(){
+            let html = "";
+            for(let i =0; i<tasks.length ; i++){
+                html +="<li>"+tasks[i]+"<button onclick='removeTask("+i+")';>x</button></li>";
+            }
+            document.getElementById("list").innerHTML = html;
+        }
+        function removeTask(i){
+            tasks.splice(i , 1)
+            saveTask()
+            display();
+        }
+        function allClear(){
+            tasks = [];
+            saveTask()
+            display();
+        }
+        loadTask();
+        display();
+    </script>
+</body>
+</html>
